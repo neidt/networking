@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class playerController : MonoBehaviour
 {
@@ -13,6 +14,10 @@ public class playerController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        if (!GetComponent<NetworkIdentity>().isLocalPlayer)
+        {
+            GetComponent<playerController>().enabled = false;
+        }
         speed = 10;
         BASESPEED = speed;
         MAXSPEED = speed * runMultiplier;

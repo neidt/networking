@@ -13,22 +13,31 @@ public class CustomNetworkControl : NetworkManager
     private const short AssignPlayerNameMessage = 2002;
     private const short PlayerJoinedGameMessage = 2003;
 
+    public class ChatMessage : MessageBase
+    {
+        public string sender;
+        public string message;
+    }
+
     public override void OnClientConnect(NetworkConnection conn)
     {
         myChat = GameObject.FindGameObjectWithTag("ChatSystem").GetComponent<ChatController>();
-        //client.Send(PlayerNameMessage, new StringMessage(playerName));
+        myChat.AnnouncePlayer(playerName);
+        client.Send(PlayerNameMessage, new StringMessage(playerName));
     }
 
     public void StartNetworkHost()
     {
         StartHost();
         NetworkServer.RegisterHandler(PlayerJoinedGameMessage, OnOtherPlayerJoinedGame);
+       
     }
 
     public void StartNetworkClient()
     {
         StartClient();
         NetworkServer.RegisterHandler(PlayerJoinedGameMessage, OnOtherPlayerJoinedGame);
+       // NetworkServer.RegisterHandler(3000,OnChatMessageReceived);
     }
 
     public void OnOtherPlayerJoinedGame(NetworkMessage netMsg)
@@ -50,8 +59,14 @@ public class CustomNetworkControl : NetworkManager
         client.Send(3000, new StringMessage(message));
     }
 
-	// Use this for initialization
-	void Start ()
+    public void OnChatMessageReceived(NetworkMessage netMsg)
+    {
+        ChatMessage received = netMsg.ReadMessage<ChatMessage>();
+
+        myChat.OnChatMessageReceived(received.sender, received.message);
+    }
+    // Use this for initialization
+    void Start ()
     {
 		
 	}

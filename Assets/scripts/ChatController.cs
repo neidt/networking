@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChatController : MonoBehaviour {
+public class ChatController : MonoBehaviour
+{
     private Dictionary<int, string> namesByConnectionID = new Dictionary<int, string>();
     private Dictionary<string, int> connectionIDsByName = new Dictionary<string, int>();
     public int maxNameLength = 20;
     private string localPlayerName;
 
     public List<string> messages = new List<string>();
-
+    private CustomNetworkControl myNetworkControl;
     public void OnChatMessageReceived(string sender, string message)
     {
         messages.Add(string.Format("[User chat] {0}: {1}", sender, message));
@@ -23,6 +24,22 @@ public class ChatController : MonoBehaviour {
     public void SetLocalPlayerName(string playerName)
     {
         localPlayerName = playerName;
+    }
+
+    internal void AddMessage(string message)
+    {
+        if (myNetworkControl == null)
+        {
+            OnChatMessageReceived(localPlayerName, message);
+            if (messages.Count > 5)
+            {
+                messages.RemoveAt(messages.Count - 1);
+            }
+            else
+            {
+                myNetworkControl.SendChatMessage(message);
+            }
+        }
     }
 
     public void AnnouncePlayer(string playerName)
@@ -49,18 +66,19 @@ public class ChatController : MonoBehaviour {
         foreach (string message in messages)
         {
             GUILayout.Label(message);
+
         }
     }
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
-            
-	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    }
+
+    // Update is called once per frame
+    void Update()
     {
-		
-	}
+
+    }
 }

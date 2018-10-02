@@ -13,8 +13,8 @@ public class ChatPanelController : MonoBehaviour
     private CustomNetworkControl myNetworkControl;
     private ChatController myChat;
 
-	// Use this for initialization
-	void Start ()
+    // Use this for initialization
+    void Start()
     {
         lblMessages.text = string.Empty;
 
@@ -22,15 +22,15 @@ public class ChatPanelController : MonoBehaviour
         txtMessage.Select();
 
         GameObject networkController = GameObject.FindGameObjectWithTag("NetworkController");
-        if(networkController != null)
+        if (networkController != null)
         {
             myNetworkControl = networkController.GetComponent<CustomNetworkControl>();
         }
         myChat = GameObject.FindGameObjectWithTag("ChatSystem").GetComponent<ChatController>();
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
         if (myNetworkControl != null)
         {
@@ -40,7 +40,7 @@ public class ChatPanelController : MonoBehaviour
                 displayLines.Add(myChat.messages[i]);
             }
             displayLines.Reverse();
-            //RefreshMessageDisplay();
+            RefreshMessageDisplay();
         }
     }
 
@@ -49,14 +49,19 @@ public class ChatPanelController : MonoBehaviour
         string message = txtMessage.text.Trim();
         if (message.Length > 0)
         {
-            displayLines.Add(message);
-            if (displayLines.Count > numberOfLines)
+            if (myNetworkControl == null)
             {
-                displayLines.RemoveAt(0);
+                displayLines.Add(message);
+                if (displayLines.Count > numberOfLines)
+                {
+                    displayLines.RemoveAt(0);
+                }
+                RefreshMessageDisplay();
             }
-
-            RefreshMessageDisplay();
-
+            else
+            {
+                myNetworkControl.SendChatMessage(message);
+            }
             txtMessage.text = string.Empty;
         }
         txtMessage.ActivateInputField();

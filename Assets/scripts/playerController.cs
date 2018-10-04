@@ -10,10 +10,23 @@ public class playerController : MonoBehaviour
     private bool isRunning = false;
     private float MAXSPEED;
     private float BASESPEED;
+    public float rotateFactor = 100.0f;
+    public float pitchFactor = 100.0f;
 
+    private Transform eyeMount;
+    public Transform boomBoomStick;
+    private CharacterController characterController;
     // Use this for initialization
     void Start()
     {
+        characterController = GetComponent<CharacterController>();
+
+        eyeMount = transform.Find("EyeMount");
+        boomBoomStick = transform.Find("BoomBoomStick");
+        if (eyeMount == null)
+        {
+            Debug.LogError("Player GameObject error: No EyeMount child.");
+        }
         if (!GetComponent<NetworkIdentity>().isLocalPlayer)
         {
             GetComponent<playerController>().enabled = false;
@@ -41,21 +54,18 @@ public class playerController : MonoBehaviour
         }
 
         //movement
-        if (Input.GetKey(KeyCode.W))
+        Vector3 moveDirection = Vector3.zero;
+        if (Input.GetKey(KeyCode.W)) moveDirection += transform.forward;
+        if (Input.GetKey(KeyCode.A)) moveDirection += -transform.right;
+        if (Input.GetKey(KeyCode.S)) moveDirection += -transform.forward;
+        if (Input.GetKey(KeyCode.D)) moveDirection += transform.right;
+
+        characterController.SimpleMove(moveDirection.normalized * speed);
+        transform.Rotate(Vector3.up, rotateFactor * (Input.GetAxis("Mouse X") * Time.deltaTime));
+        if (eyeMount != null)
         {
-            transform.position += transform.forward * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.position += -transform.forward * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += transform.right * speed * Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position += -transform.right * speed * Time.deltaTime;
+            eyeMount.Rotate(Vector3.right, rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
+            boomBoomStick.Rotate(Vector3.up, rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
         }
     }
 }

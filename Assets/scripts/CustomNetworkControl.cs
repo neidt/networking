@@ -23,7 +23,7 @@ public class CustomNetworkControl : NetworkManager
     {
         myChat = GameObject.FindGameObjectWithTag("ChatSystem").GetComponent<ChatController>();
         myChat.AnnouncePlayer(playerName);
-        client.Send(PlayerNameMessage, new StringMessage(playerName));
+        //client.Send(PlayerNameMessage, new StringMessage(playerName));
     }
 
     public void StartNetworkHost()

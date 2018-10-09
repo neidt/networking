@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class playerController : MonoBehaviour
+public class playerController : NetworkBehaviour
 {
     public float speed;
     public float runMultiplier;
     private bool isRunning = false;
     private float MAXSPEED;
     private float BASESPEED;
-    public float rotateFactor = 100.0f;
-    public float pitchFactor = 100.0f;
+    public float rotateFactor = 500.0f;
+    public float pitchFactor = 500.0f;
 
     private Transform eyeMount;
     public Transform boomBoomStick;
@@ -55,17 +55,17 @@ public class playerController : MonoBehaviour
 
         //movement
         Vector3 moveDirection = Vector3.zero;
-        if (Input.GetKey(KeyCode.W)) moveDirection += transform.forward;
-        if (Input.GetKey(KeyCode.A)) moveDirection += -transform.right;
-        if (Input.GetKey(KeyCode.S)) moveDirection += -transform.forward;
-        if (Input.GetKey(KeyCode.D)) moveDirection += transform.right;
+        if (Input.GetKey(KeyCode.W)) moveDirection += transform.right;
+        if (Input.GetKey(KeyCode.A)) moveDirection += transform.forward;
+        if (Input.GetKey(KeyCode.S)) moveDirection += -transform.right;
+        if (Input.GetKey(KeyCode.D)) moveDirection += -transform.forward;
 
         characterController.SimpleMove(moveDirection.normalized * speed);
         transform.Rotate(Vector3.up, rotateFactor * (Input.GetAxis("Mouse X") * Time.deltaTime));
         if (eyeMount != null)
         {
-            eyeMount.Rotate(Vector3.right, rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
-            boomBoomStick.Rotate(Vector3.up, rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
+            eyeMount.Rotate(Vector3.right, -rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
+            boomBoomStick.Rotate(Vector3.forward, rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
         }
     }
 }

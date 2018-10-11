@@ -128,7 +128,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &75912956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +157,7 @@ MonoBehaviour:
   m_OnlineScene: SampleScene
   m_SpawnPrefabs:
   - {fileID: 1611393977127386, guid: 2fb7f6592a027184b8b53d0112b97e7a, type: 2}
+  - {fileID: 1480427381993608, guid: 0244994d7e9092d40817ccbc0d3273fe, type: 2}
   m_CustomConfig: 0
   m_MaxConnections: 4
   m_ConnectionConfig:
@@ -464,7 +465,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.041183103}
   m_AnchorMax: {x: 0.28454775, y: 0.16472651}
-  m_AnchoredPosition: {x: 50.2, y: 469.1}
+  m_AnchoredPosition: {x: 50.2, y: 331}
   m_SizeDelta: {x: -56.572495, y: 24.759995}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &470597341

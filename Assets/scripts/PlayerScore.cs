@@ -35,7 +35,8 @@ public class PlayerScore : NetworkBehaviour
     {
         if (GetComponent<NetworkIdentity>().isLocalPlayer)
         {
-            
+            score = 0;
+           
         }
 	}
 	

@@ -19,12 +19,12 @@ public class playerController : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (!isClient)
-        {
-            this.enabled = false;
-        }
-
         characterController = GetComponent<CharacterController>();
+
+        if (!isLocalPlayer ||(!isClient && !isServer))
+        {
+            //characterController.enabled = false;
+        }
 
         eyeMount = transform.Find("EyeMount");
         boomBoomStick = transform.Find("BoomBoomStick");
@@ -32,9 +32,9 @@ public class playerController : NetworkBehaviour
         {
             Debug.LogError("Player GameObject error: No EyeMount child.");
         }
-        if (!GetComponent<NetworkIdentity>().isLocalPlayer)
+        if (!isLocalPlayer)
         {
-            GetComponent<playerController>().enabled = false;
+            this.enabled = false;
         }
         speed = 10;
         BASESPEED = speed;
@@ -65,12 +65,14 @@ public class playerController : NetworkBehaviour
         if (Input.GetKey(KeyCode.S)) moveDirection += -transform.right;
         if (Input.GetKey(KeyCode.D)) moveDirection += -transform.forward;
 
-        characterController.SimpleMove(moveDirection.normalized * speed);
         transform.Rotate(Vector3.up, rotateFactor * (Input.GetAxis("Mouse X") * Time.deltaTime));
         if (eyeMount != null)
         {
             eyeMount.Rotate(Vector3.right, -rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
             boomBoomStick.Rotate(Vector3.forward, rotateFactor * (Input.GetAxis("Mouse Y") * Time.deltaTime));
         }
+
+        characterController.SimpleMove(moveDirection.normalized * speed);
+
     }
 }

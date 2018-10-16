@@ -9,6 +9,7 @@ TagManager:
   - Projectile
   - EyeMount
   - BoomBoomStick
+  - NetworkMenu
   layers:
   - Default
   - TransparentFX

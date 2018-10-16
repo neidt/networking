@@ -8,6 +8,9 @@ public class CustomNetworkControl : NetworkManager
 {
     public string playerName;
     private ChatController myChat;
+    //private scoreboardController scoreBoard;
+    public bool isAServer;
+    public string serverIPAddress;
 
     private const short PlayerNameMessage = 2001;
     private const short AssignPlayerNameMessage = 2002;
@@ -22,14 +25,20 @@ public class CustomNetworkControl : NetworkManager
     public override void OnClientConnect(NetworkConnection conn)
     {
         myChat = GameObject.FindGameObjectWithTag("ChatSystem").GetComponent<ChatController>();
-        myChat.AnnouncePlayer(playerName);
         client.Send(PlayerNameMessage, new StringMessage(playerName));
+        isAServer = false;
+    }
+
+    public override void OnStartServer()
+    {
+        isAServer = true;
     }
 
     public void StartNetworkHost()
     {
         StartHost();
-        //NetworkServer.RegisterHandler(PlayerJoinedGameMessage, OnOtherPlayerJoinedGame);
+        print("network address is:" + networkAddress);
+
         RegisterServerListeners();
         RegisterClientListeners();
     }
@@ -38,8 +47,6 @@ public class CustomNetworkControl : NetworkManager
     {
         StartClient();
         RegisterClientListeners();
-        // NetworkServer.RegisterHandler(PlayerJoinedGameMessage, OnOtherPlayerJoinedGame);
-        // NetworkServer.RegisterHandler(3000,OnChatMessageReceived);
     }
 
     public void SendChatMessage(string message)
@@ -71,19 +78,9 @@ public class CustomNetworkControl : NetworkManager
     public void OnChatMessageReceived(NetworkMessage netMsg)
     {
         ChatMessage received = netMsg.ReadMessage<ChatMessage>();
-
         myChat.OnChatMessageReceived(received.sender, received.message);
     }
-
-
-    /*
-    public void OnOtherPlayerJoinedGame(NetworkMessage netMsg)
-    {
-        string playerName = netMsg.ReadMessage<StringMessage>().value;
-        print("other poalyer joinged messsgae reveiced, name is " + playerName);
-        myChat.AnnouncePlayer(playerName);
-    }*/
-
+    
     private void RegisterServerListeners()
     {
         NetworkServer.RegisterHandler(2001, OnPlayerNameReceived);
@@ -98,14 +95,7 @@ public class CustomNetworkControl : NetworkManager
         NetworkServer.SendToClient(netMsg.conn.connectionId, 2002, new StringMessage(playerName));
         NetworkServer.SendToAll(2003, new StringMessage(playerName));
     }
-    /*
-    public void OnPlayerNameRecieved(NetworkMessage netMsg)
-    {
-        StringMessage specificMessage = netMsg.ReadMessage<StringMessage>();
-        playerName = specificMessage.value;
-        NetworkServer.SendToAll(PlayerJoinedGameMessage, new StringMessage(playerName));
-    }*/
-
+    
     public void OnPlayerSendChatMessage(NetworkMessage netMsg)
     {
         string message = netMsg.ReadMessage<StringMessage>().value.Trim();
@@ -118,14 +108,6 @@ public class CustomNetworkControl : NetworkManager
         ChatMessage chatMessage = new ChatMessage() { sender = senderName, message = message };
         NetworkServer.SendToAll(3001, chatMessage);
     }
-    /*
-    public void OnChatMessageReceived(NetworkMessage netMsg)
-    {
-        ChatMessage received = netMsg.ReadMessage<ChatMessage>();
-
-        myChat.OnChatMessageReceived(received.sender, received.message);
-    }*/
-
 
     // Use this for initialization
     void Start()

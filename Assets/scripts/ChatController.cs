@@ -7,10 +7,12 @@ public class ChatController : MonoBehaviour
     private Dictionary<int, string> namesByConnectionID = new Dictionary<int, string>();
     private Dictionary<string, int> connectionIDsByName = new Dictionary<string, int>();
     public int maxNameLength = 20;
-    private string localPlayerName;
+    public int maxMessages = 5;
+    private string localPlayerName = "Local PLayer";
 
     public List<string> messages = new List<string>();
     private CustomNetworkControl myNetworkControl;
+
     public void OnChatMessageReceived(string sender, string message)
     {
         messages.Add(string.Format("[User chat] {0}: {1}", sender, message));
@@ -31,7 +33,7 @@ public class ChatController : MonoBehaviour
         if (myNetworkControl == null)
         {
             OnChatMessageReceived(localPlayerName, message);
-            if (messages.Count > 5)
+            if (messages.Count > maxMessages)
             {
                 messages.RemoveAt(messages.Count - 1);
             }
@@ -46,10 +48,10 @@ public class ChatController : MonoBehaviour
     {
         messages.Add(string.Format("Player {0} joined.", playerName));
     }
-
+    
     internal string SetPlayerName(string playerName, int connectionID)
     {
-        //playername = ensureunique(playername, connectionID);
+        
         if (namesByConnectionID.ContainsKey(connectionID))
         {
             //remove dfrom both indexes firest
@@ -58,9 +60,10 @@ public class ChatController : MonoBehaviour
         }
         connectionIDsByName.Add(playerName, connectionID);
         namesByConnectionID.Add(connectionID, playerName);
+
         return playerName;
     }
-
+    /*
     private void OnGUI()
     {
         foreach (string message in messages)
@@ -69,11 +72,15 @@ public class ChatController : MonoBehaviour
 
         }
     }
-
+*/
     // Use this for initialization
     void Start()
     {
-
+        GameObject networkControllerObj = GameObject.FindGameObjectWithTag("NetworkController");
+        if (networkControllerObj != null)
+        {
+            myNetworkControl = networkControllerObj.GetComponent<CustomNetworkControl>();
+        }
     }
 
     // Update is called once per frame

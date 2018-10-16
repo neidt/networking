@@ -19,6 +19,11 @@ public class playerController : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
+        if (!isClient)
+        {
+            this.enabled = false;
+        }
+
         characterController = GetComponent<CharacterController>();
 
         eyeMount = transform.Find("EyeMount");

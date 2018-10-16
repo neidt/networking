@@ -17,7 +17,7 @@ public class NetworkMenuController : MonoBehaviour
         {
             customNetworkControl = GameObject.FindGameObjectWithTag("NetworkController").GetComponent<CustomNetworkControl>();
         }
-
+        
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
         string hostName = System.Net.Dns.GetHostName();
         foreach (System.Net.IPAddress ip in System.Net.Dns.GetHostEntry(hostName).AddressList)
@@ -45,7 +45,7 @@ public class NetworkMenuController : MonoBehaviour
     public void btnStartClient_Click()
     {
         string ipAddress = txtIPAddress.text.Trim();
-        if (IsValidIPAddress(ipAddress))
+        if (!IsValidIPAddress(ipAddress))
         {
             txtIPAddress.text = string.Empty;
         }

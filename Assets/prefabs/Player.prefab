@@ -639,7 +639,7 @@ MonoBehaviour:
     i14: 126
     i15: 122
   m_ServerOnly: 0
-  m_LocalPlayerAuthority: 0
+  m_LocalPlayerAuthority: 1
 --- !u!135 &135167352046695784
 SphereCollider:
   m_ObjectHideFlags: 1

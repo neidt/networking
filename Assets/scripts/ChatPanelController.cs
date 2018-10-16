@@ -32,7 +32,7 @@ public class ChatPanelController : MonoBehaviour
         }
         if (myNetworkControl.isAServer)
         {
-            lblIPAddress.text = "Server Address: " + myNetworkControl.serverIPAddress;
+            lblIPAddress.text = "Server Address: " + myNetworkControl.serverIPAddress.ToString();
         }
         else
         {
